@@ -1,0 +1,41 @@
+<project name="HelloWorld" basedir="." default="all" xmlns:ivy="junit:org.junit_4.8.2.dist">
+	<!-- /usr/share/java/junit4.jar -->
+    <property name="src.dir"     value="src"/>
+    <property name="bin.dir"   value="bin"/>
+    <property name="main-class"  value="oata.HelloWorld"/>
+    <property name="junit.jar.path"  value="/usr/share/java/junit4.jar"/>
+    <property name="report.folder"  value="report"/>
+    <property name="report.file"  value="${report.folder}/report"/>
+    <property name="report.type"  value="xml"/>
+	
+	<!-- Start recipies -->
+    <target name="clean">
+        <delete dir="${bin.dir}" />
+        <delete dir="${report.folder}" />
+    </target>
+
+    <target name="compile" depends="clean">
+        <mkdir dir="${bin.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${bin.dir}" classpath="${junit.jar.path}" />
+    </target>
+
+    <target name="test" description="Run JUnit tests">
+        <mkdir dir="${report.folder}"/>
+        
+        <junit printsummary="yes" dir="${bin.dir}" fork="true">
+            <classpath>
+                <pathelement location="${bin.dir}" />
+                <pathelement location="${junit.jar.path}" />
+            </classpath>
+            <test name="test.CalculatorTest" haltonfailure="no" outfile="${report.file}">
+                <formatter type="${report.type}" />
+            </test>
+        </junit>
+    </target>
+    
+    <target name="main">
+    	<java classpath="${bin.dir}" classname="calc.Calculator" fork="true"/>
+    </target>
+    
+    <target name="all"  depends="clean,compile,test,main"></target>
+</project>
